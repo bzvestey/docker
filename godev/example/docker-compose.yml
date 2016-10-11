@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  app:
+    build: .
+    image: godev-example:latest
+    volumes:
+      - .:/go/src/godev-example
+    ports:
+      - "8080:8080"
