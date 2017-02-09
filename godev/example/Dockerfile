@@ -21,4 +21,4 @@ RUN chmod +x $TOOLS/build.sh
 RUN mkdir -p $BUILDPATH
 VOLUME $BUILDPATH
 WORKDIR $BUILDPATH
-CMD reflex -c $TOOLS/reflex.conf
+CMD watcher -cmd $TOOLS/build.sh .

@@ -14,7 +14,7 @@ RUN apk update && apk upgrade && \
     openssh
 
 # get reflex
-RUN go get github.com/cespare/reflex
+RUN go get -u github.com/radovskyb/watcher/...
 
 # setup the folder for tools
 RUN mkdir -p $TOOLS
