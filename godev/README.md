@@ -1,11 +1,11 @@
 # GoDev
 A development container for your Go projects!  This is container will
-continuously rebuild your Go code as you save the files.
+continuously rebuild your Go code as you save the files.  You can also adjust
+it from the example project to run any other commands you need to happen with
+the bulding of the source.
 
-I try and upload new version with Go releases at [bzvestey/godev](https://hub.docker.com/r/bzvestey/godev/).
-
-*NOTE:* This does not work on Windows when made, as the filesystem notifications
-are not passed over samba (how volumes work in windows).
+I try and upload new version with Go releases at
+[bzvestey/godev](https://hub.docker.com/r/bzvestey/godev/).
 
 *NOTE:* This documentation is still in-progress, and will probably take me a
 while to complete.
@@ -15,31 +15,32 @@ This container is designed to be a base for a project specific container, and
 so you will need to setup your own Dockerfile with a few additional items.
 
 #### Setup Project Container
-The Dockerfile you create for your project will need add option build script
-and reflex config file, and attach your code file to the contaier so it can be
-built.
+The Dockerfile you create for your project will need add a build script and
+attach your code file to the contaier so it can be built.
+
+All files used here are part of an example project here:
+[https://github.com/bzvestey/docker/blob/master/godev/example](https://github.com/bzvestey/docker/blob/master/godev/example).
 
 *Example Dockerfile with explanations*
-```dockerfile
+```Dockerfile
 # set the base container to be the correct tag of the godev container
 FROM bzvestey/godev:latest
 
-# set the path that the project code will be living
+# set the path that the project code will be living in, and the name of our
+# built executable.
 ENV BUILDPATH $GOPATH/src/godev-example
+ENV OUTPUT_NAME godev-exmaple
 
 # set the port to use, and expose it to the outside
 ENV PORT 8080
 EXPOSE $PORT
 
-# here I add a build.sh file to the tools directory, explained below this is
-# used by reflex build and run the project on file change.  We also need to make
-# it executable
+# We add our build script (build.sh) and its companion for running the program
+# (run.sh) and make them executable so that we can run them when files change.
 ADD build.sh $TOOLS
 RUN chmod +x $TOOLS/build.sh
-
-# Adding a reflex configuration file, though you can also pass this information
-# when you call reflex in the CMD call.
-ADD reflex.conf $TOOLS
+ADD run.sh $TOOLS
+RUN chmod +x $TOOLS/run.sh
 
 # Make sure that we have a directory at the build path and them set it to a
 # volume so when the project container is run the code can be mounted
@@ -47,12 +48,12 @@ RUN mkdir -p $BUILDPATH
 VOLUME $BUILDPATH
 WORKDIR $BUILDPATH
 
-# Run reflex as the main command for the container, and make sure to tell it
-# where the configuration is.
-CMD reflex -c $TOOLS/reflex.conf
+# First we run through our build script so that the program can start out
+# running, and then we run watcher to run build again once a file changes.
+CMD . $TOOLS/build.sh && watcher -dotfiles=false -cmd $TOOLS/build.sh .
 ```
 
-The example contains build.sh and reflex.conf files you can use as an example.
+The example contains build.sh and run.sh files you can use as an example.
 
 ### Run the Example
 Run ```docker-compose up``` in the example folder and point your browser
