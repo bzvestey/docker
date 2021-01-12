@@ -1,5 +1,5 @@
 # set the base box
-FROM golang:1.9.2-alpine
+FROM golang:1.15.6-alpine
 
 # Setup some go environment
 ENV GOBINARIES /go/bin
