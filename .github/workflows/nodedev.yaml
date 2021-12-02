@@ -1,0 +1,49 @@
+name: nodedev-container-building
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'The operating system base to use, like alpine, and should start with a -'
+        required: false
+        type: string
+        default: ''
+      version:
+        description: 'The version of node to build on top of'
+        required: true
+        type: string
+
+jobs:
+  build-containers-dockerhub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout the code'
+        uses: actions/checkout@v2
+
+      - name: 'Log into Docker Hub'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Extract metadata (tags, labels) for Docker'
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/bzvestey/nodedev
+          tags: |
+            ${{ inputs.version }}${{ inputs.os }}
+            latest
+
+      - name: 'Build and Push the Docker container.'
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          # tags: ghcr.io/bzvestey/nodedev:${{ inputs.version }}${{ inputs.os }}
+          tags: ${{ steps.meta.outputs.tags }}
+          # labels: ${{ steps.meta.outputs.labels }}
+          context: ./nodedev
+          build-args: |
+            version=${{ inputs.version }}
+            os=${{ inputs.os }}
+
