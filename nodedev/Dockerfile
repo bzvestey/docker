@@ -1,5 +1,5 @@
-ARG version=16.13.0
-ARG os=-alpine
+ARG version=latest
+ARG os
 
 FROM node:$version$os
 
