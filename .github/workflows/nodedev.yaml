@@ -1,6 +1,6 @@
 name: nodedev-container-building
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       os:
         description: 'The operating system base to use, like alpine, and should start with a -'
