@@ -13,8 +13,8 @@ on:
         default: ''
 
 env:
-  VERSION: github.event.inputs.version
-  OS: github.event.inputs.os 
+  VERSION: ${{ github.event.inputs.version }}
+  OS: ${{ github.event.inputs.os }}
 
 jobs:
   build-containers-dockerhub:
