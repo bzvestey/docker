@@ -17,7 +17,7 @@ env:
   OS: ${{ github.event.inputs.os }}
 
 jobs:
-  build-containers-dockerhub:
+  build-containers-ghcr:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout the code'
@@ -39,14 +39,12 @@ jobs:
             ${{ env.VERSION }}${{ env.OS }}
             latest
 
-      - name: 'Build and Push the Docker container.'
+      - name: 'Build and Push the container.'
         uses: docker/build-push-action@v2
         with:
-          push: true
-          # tags: ghcr.io/bzvestey/nodedev:${{ inputs.version }}${{ inputs.os }}
-          tags: ${{ steps.meta.outputs.tags }}
-          # labels: ${{ steps.meta.outputs.labels }}
           context: ./nodedev
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             version=${{ env.VERSION }}
             os=${{ env.OS }}
