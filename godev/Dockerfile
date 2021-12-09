@@ -4,6 +4,10 @@ ARG os
 # set the base box
 FROM golang:$version$os 
 
+LABEL org.opencontainers.image.source="github.com/bzvestey/docker" \
+ org.opencontainers.image.description="Go Development Docker Container"
+
+
 # Setup some go environment
 ENV GOBINARIES /go/bin
 ENV GOPATH /go
