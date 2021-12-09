@@ -17,11 +17,9 @@ echo ============================================================
     fi
   fi
 
-  echo "Building Server" &&
-  go build -o $GOBINARIES/$OUTPUT_NAME &&
+  echo "Building Server" && go install -v
 
-  echo "Running Server" &&
-  $TOOLS/run.sh
+  echo "Running Server" && $TOOLS/run.sh
 
 } || { # catch it if there was an error, as we do not want to exit with non 0
   echo "We had an error... Look in the console for the issue!"

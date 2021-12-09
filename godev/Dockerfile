@@ -1,10 +1,12 @@
+ARG version=latest
+ARG os 
+
 # set the base box
-FROM golang:1.17.0-alpine
+FROM golang:$version$os 
 
 # Setup some go environment
 ENV GOBINARIES /go/bin
 ENV GOPATH /go
-ENV TOOLS /go/_tools
 
 # Install our dependencies
 RUN apk update && apk upgrade --no-cache && \
@@ -16,5 +18,31 @@ RUN apk update && apk upgrade --no-cache && \
 # get reflex
 RUN go get -u github.com/radovskyb/watcher/...
 
-# setup the folder for tools
+# set the path that the project code will be living in, and the name of our
+# built executable.
+ENV BUILDPATH /service 
+ENV OUTPUT_NAME service
+
+# set the port to use, and expose it to the outside
+ENV PORT 8080
+EXPOSE $PORT
+
+# We add our build script (build.sh) and its companion for running the program
+# (run.sh) and make them executable so that we can run them when files change.
+ENV TOOLS /go/_tools
 RUN mkdir -p $TOOLS
+ADD tools/build.sh $TOOLS
+RUN chmod +x $TOOLS/build.sh
+ADD tools/run.sh $TOOLS
+RUN chmod +x $TOOLS/run.sh
+
+# Make sure that we have a directory at the build path and them set it to a
+# volume so when the project container is run the code can be mounted
+RUN mkdir -p $BUILDPATH
+VOLUME $BUILDPATH
+WORKDIR $BUILDPATH
+
+# First we run through our build script so that the program can start out
+# running, and then we run watcher to run build again once a file changes.
+CMD . $TOOLS/build.sh && watcher -dotfiles=false -cmd $TOOLS/build.sh .
+
