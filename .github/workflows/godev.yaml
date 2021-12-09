@@ -1,9 +1,9 @@
-name: nodedev-container-building
+name: godev-container-building
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The version of node to build on top of'
+        description: 'The version of Go to build on top of'
         required: true
         type: string
       os:
@@ -34,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/bzvestey/nodedev
+          images: ghcr.io/bzvestey/godev 
           tags: |
             ${{ env.VERSION }}${{ env.OS }}
             latest
@@ -42,7 +42,7 @@ jobs:
       - name: 'Build and Push the container.'
         uses: docker/build-push-action@v2
         with:
-          context: ./nodedev
+          context: ./godev 
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
