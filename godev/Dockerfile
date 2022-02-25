@@ -20,7 +20,7 @@ RUN apk update && apk upgrade --no-cache && \
     openssh
 
 # get reflex
-RUN go get -u github.com/bzvestey/watcher/...
+RUN go install github.com/bzvestey/watcher/...@latest
 
 # set the path that the project code will be living in, and the name of our
 # built executable.
