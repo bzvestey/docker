@@ -20,7 +20,7 @@ RUN apk update && apk upgrade --no-cache && \
     openssh
 
 # get reflex
-RUN go get -u github.com/radovskyb/watcher/...
+RUN go get -u github.com/bzvestey/watcher/...
 
 # set the path that the project code will be living in, and the name of our
 # built executable.
@@ -48,5 +48,5 @@ WORKDIR $BUILDPATH
 
 # First we run through our build script so that the program can start out
 # running, and then we run watcher to run build again once a file changes.
-CMD . $TOOLS/build.sh && watcher -dotfiles=false -cmd $TOOLS/build.sh .
+CMD . $TOOLS/build.sh && watcher -dotfiles=false --max-events=1 -cmd $TOOLS/build.sh .
 
