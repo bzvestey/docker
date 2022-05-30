@@ -40,14 +40,16 @@ ADD tools/build.sh $TOOLS
 RUN chmod +x $TOOLS/build.sh
 ADD tools/run.sh $TOOLS
 RUN chmod +x $TOOLS/run.sh
+ADD tools/setup.sh $TOOLS
+RUN chmod +x $TOOLS/setup.sh
 
 # Make sure that we have a directory at the build path and them set it to a
 # volume so when the project container is run the code can be mounted
-RUN mkdir -p $BUILDPATH
+RUN mkdir -p $VOLUMEPATH
 VOLUME $VOLUMEPATH
 WORKDIR $BUILDPATH
 
 # First we run through our build script so that the program can start out
 # running, and then we run watcher to run build again once a file changes.
-CMD . $TOOLS/build.sh && watcher -dotfiles=false --max-events=1 -cmd $TOOLS/build.sh .
+CMD . $TOOLS/setup.sh && watcher -dotfiles=false --max-events=1 -cmd $TOOLS/build.sh .
 
