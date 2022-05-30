@@ -24,6 +24,7 @@ RUN go install github.com/bzvestey/watcher/...@latest
 
 # set the path that the project code will be living in, and the name of our
 # built executable.
+ENV VOLUMEPATH /service
 ENV BUILDPATH /service 
 ENV OUTPUT_NAME service
 
@@ -43,7 +44,7 @@ RUN chmod +x $TOOLS/run.sh
 # Make sure that we have a directory at the build path and them set it to a
 # volume so when the project container is run the code can be mounted
 RUN mkdir -p $BUILDPATH
-VOLUME $BUILDPATH
+VOLUME $VOLUMEPATH
 WORKDIR $BUILDPATH
 
 # First we run through our build script so that the program can start out
