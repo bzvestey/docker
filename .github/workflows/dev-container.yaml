@@ -1,9 +1,17 @@
-name: bundev-container-building
+name: container-building
 on:
   workflow_dispatch:
     inputs:
+      container:
+        description: 'The container to buld'
+        required: true
+        type: choice
+        options:
+          - bundev
+          - godev
+          - nodedev
       version:
-        description: 'The version of bun to build on top of'
+        description: 'The version of Go to build on top of'
         required: true
         type: string
       os:
@@ -34,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/bzvestey/bundev
+          images: ghcr.io/bzvestey/${{ inputs.container }} 
           tags: |
             ${{ env.VERSION }}${{ env.OS }}
             latest
@@ -42,7 +50,7 @@ jobs:
       - name: 'Build and Push the container.'
         uses: docker/build-push-action@v2
         with:
-          context: ./nodedev
+          context: ./${{ inputs.container }} 
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
