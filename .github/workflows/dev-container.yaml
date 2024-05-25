@@ -20,7 +20,7 @@ on:
         type: string
         default: ''
 
-run-name: Building a ${{ inputs.container }} version ${{ inputs.version }} with os ${{ inputs.os }}
+run-name: Building ${{ inputs.container }} version ${{ inputs.version }} on ${{ inputs.os }}
 
 env:
   VERSION: ${{ inputs.version }}
