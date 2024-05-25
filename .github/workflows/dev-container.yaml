@@ -20,9 +20,11 @@ on:
         type: string
         default: ''
 
+run-name: Building a ${{ inputs.container }} version ${{ inputs.version }} with os ${{ inputs.os }}
+
 env:
-  VERSION: ${{ github.event.inputs.version }}
-  OS: ${{ github.event.inputs.os }}
+  VERSION: ${{ inputs.version }}
+  OS: ${{ inputs.os }}
 
 jobs:
   build-containers-ghcr:
