@@ -10,8 +10,9 @@ on:
           - bundev
           - godev
           - nodedev
+          - foundry
       version:
-        description: 'The version of Go to build on top of'
+        description: 'The version of the base docker image to build on top of'
         required: true
         type: string
       os:
